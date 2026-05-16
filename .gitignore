@@ -1,0 +1,94 @@
+# =============================================================================
+# Multi-Agent Threat Modeling Framework - .gitignore
+# =============================================================================
+
+# === Environment Variables (NEVER COMMIT!) ===
+.env
+.env.local
+.env.*.local
+*.env
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# === Virtual Environments ===
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# === IDE / Editors ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# === Jupyter Notebook ===
+.ipynb_checkpoints
+*.ipynb_checkpoints
+
+# === Testing & Coverage ===
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# === Linter / Formatter caches ===
+.ruff_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# === Project-specific outputs ===
+outputs/
+results/
+*.log
+logs/
+
+# === Phase 2 — Vector DB (akan dibuat lokal, tidak perlu di-commit) ===
+chroma_db/
+*.sqlite
+*.sqlite3
+
+# === Phase 3 — Streamlit cache ===
+.streamlit/cache/
+
+# === Sensitive Data ===
+*.key
+*.pem
+*.crt
+secrets/
+
+# === Misc ===
+*.tmp
+*.bak

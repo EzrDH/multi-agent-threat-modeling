@@ -1,0 +1,108 @@
+# =============================================================================
+# .gitattributes — Multi-Agent Threat Modeling Framework
+# =============================================================================
+# Memastikan konsistensi line ending lintas-platform (Windows / Linux / Mac).
+# Default: LF untuk semua file teks. Exception khusus untuk file Windows.
+# =============================================================================
+
+# Auto-detect text files and normalize line endings to LF
+* text=auto eol=lf
+
+# -----------------------------------------------------------------------------
+# Source Code — Python (LF wajib, standar PEP 8 dan CI/CD)
+# -----------------------------------------------------------------------------
+*.py    text eol=lf
+*.pyw   text eol=lf
+*.pyi   text eol=lf
+
+# -----------------------------------------------------------------------------
+# Configuration Files
+# -----------------------------------------------------------------------------
+*.json  text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+*.toml  text eol=lf
+*.ini   text eol=lf
+*.cfg   text eol=lf
+
+# -----------------------------------------------------------------------------
+# Documentation
+# -----------------------------------------------------------------------------
+*.md    text eol=lf
+*.rst   text eol=lf
+*.txt   text eol=lf
+
+# -----------------------------------------------------------------------------
+# Shell / Unix Scripts (HARUS LF — kalau CRLF, akan rusak di Linux/Mac)
+# -----------------------------------------------------------------------------
+*.sh    text eol=lf
+*.bash  text eol=lf
+
+# -----------------------------------------------------------------------------
+# Windows Scripts (HARUS CRLF)
+# -----------------------------------------------------------------------------
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+*.ps1   text eol=crlf
+
+# -----------------------------------------------------------------------------
+# Environment & Dotfiles
+# -----------------------------------------------------------------------------
+.env*           text eol=lf
+.gitignore      text eol=lf
+.gitattributes  text eol=lf
+.editorconfig   text eol=lf
+
+# -----------------------------------------------------------------------------
+# Web Assets (Phase 3 — UI Streamlit)
+# -----------------------------------------------------------------------------
+*.html  text eol=lf
+*.css   text eol=lf
+*.js    text eol=lf
+
+# -----------------------------------------------------------------------------
+# Binary Files — jangan di-diff atau di-merge
+# -----------------------------------------------------------------------------
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.svg   binary
+*.pdf   binary
+*.zip   binary
+*.tar   binary
+*.gz    binary
+*.7z    binary
+*.exe   binary
+*.dll   binary
+*.so    binary
+
+# -----------------------------------------------------------------------------
+# Python Compiled
+# -----------------------------------------------------------------------------
+*.pyc   binary
+*.pyo   binary
+*.pyd   binary
+
+# -----------------------------------------------------------------------------
+# Database Files (Phase 2 — ChromaDB akan generate ini)
+# -----------------------------------------------------------------------------
+*.sqlite    binary
+*.sqlite3   binary
+*.db        binary
+
+# -----------------------------------------------------------------------------
+# AI/ML Model Files (Phase 2-3 — kalau pakai local embedding)
+# -----------------------------------------------------------------------------
+*.pkl           binary
+*.h5            binary
+*.onnx          binary
+*.bin           binary
+*.safetensors   binary
+
+# -----------------------------------------------------------------------------
+# Linguist Overrides (GitHub language detection)
+# -----------------------------------------------------------------------------
+docs/* linguist-documentation
+data/* linguist-generated=false
