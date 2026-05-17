@@ -1,0 +1,122 @@
+{
+  "system_name": "Sistem Login E-Commerce Sederhana",
+  "total_threats_identified": 10,
+  "threats": [
+    {
+      "id": "T001",
+      "category": "Denial of Service",
+      "title": "Brute-Force / Credential Stuffing Attack",
+      "description": "Tanpa mekanisme rate limiting yang eksplisit, penyerang dapat melakukan percobaan login berulang kali (brute-force) atau menggunakan daftar kredensial curian (credential stuffing) untuk mengidentifikasi akun yang valid atau mengunci akun pengguna, menyebabkan DoS bagi pengguna sah.",
+      "location": "P2 Login Service API",
+      "cwe_reference": "CWE-307",
+      "severity": "High",
+      "rationale": "Asumsi keamanan secara eksplisit menyatakan 'Tidak ada rate limiting eksplisit'. Ini adalah celah keamanan yang serius yang dapat dieksploitasi untuk mengganggu layanan atau mengkompromikan akun."
+    },
+    {
+      "id": "T002",
+      "category": "Spoofing",
+      "title": "Weak Password Hashing Algorithm",
+      "description": "Algoritma hashing password yang tidak ditentukan atau lemah (misalnya, tanpa salt yang cukup atau iterasi yang rendah) dapat memungkinkan penyerang untuk melakukan serangan offline cracking terhadap password hash yang diperoleh dari D1, sehingga dapat meniru identitas pengguna.",
+      "location": "D1 User Database, P2 Login Service API",
+      "cwe_reference": "CWE-916",
+      "severity": "Critical",
+      "rationale": "Asumsi menyatakan 'Password disimpan sebagai hash di database (algoritma tidak ditentukan)'. Ketidakjelasan ini menimbulkan risiko tinggi. Jika algoritma yang digunakan lemah, kredensial pengguna dapat dikompromikan secara massal."
+    },
+    {
+      "id": "T003",
+      "category": "Elevation of Privilege",
+      "title": "Insecure JWT Signing/Verification",
+      "description": "Jika algoritma signing JWT tidak ditentukan atau tidak diverifikasi dengan benar (misalnya, mengizinkan 'alg: none' atau menggunakan secret yang lemah), penyerang dapat memalsukan atau memodifikasi token sesi (F7), memungkinkan mereka untuk membajak sesi pengguna lain dan mendapatkan hak akses yang tidak sah.",
+      "location": "P4 Session Manager, F7 Session cookie",
+      "cwe_reference": "CWE-347",
+      "severity": "Critical",
+      "rationale": "Asumsi menyatakan 'Session token menggunakan JWT (algoritma signing tidak ditentukan)'. Ini adalah celah kritis yang dapat mengarah pada pembajakan sesi dan eskalasi hak akses jika implementasi JWT tidak aman."
+    },
+    {
+      "id": "T004",
+      "category": "Tampering",
+      "title": "Weak TLS/SSL Configuration",
+      "description": "Meskipun HTTPS digunakan, konfigurasi TLS/SSL yang lemah (misalnya, cipher suite yang usang, protokol TLS versi lama, atau sertifikat yang tidak valid) dapat memungkinkan serangan Man-in-the-Middle (MITM) pada komunikasi eksternal (F1, F2, F7, F9, F10, F12), memungkinkan penyerang untuk memodifikasi data atau mencuri informasi sensitif.",
+      "location": "TB1 Internet Boundary, F1, F2, F7, F9, F10, F12",
+      "cwe_reference": "CWE-327",
+      "severity": "High",
+      "rationale": "Aspek 'TLS/SSL configuration' secara eksplisit diminta untuk diperhatikan. Konfigurasi yang tidak tepat dapat merusak tujuan HTTPS, memungkinkan serangan MITM yang serius."
+    },
+    {
+      "id": "T005",
+      "category": "Elevation of Privilege",
+      "title": "Predictable or Guessable Password Reset Token",
+      "description": "Meskipun menggunakan UUID v4, jika implementasi token reset password (F11, F12) memiliki kelemahan dalam generasi, validasi, atau terdapat side-channel, penyerang mungkin dapat menebak atau mem-brute-force token, memungkinkan mereka untuk mereset password pengguna lain dan mendapatkan akses akun.",
+      "location": "P3 Password Reset Service, F11, F12",
+      "cwe_reference": "CWE-640",
+      "severity": "High",
+      "rationale": "Asumsi menyebutkan 'Email reset menggunakan token UUID v4'. Meskipun UUID v4 secara inheren acak, kesalahan implementasi dalam siklus hidup token (generasi, validasi, masa berlaku) dapat menciptakan kerentanan yang mengarah pada pengambilalihan akun."
+    },
+    {
+      "id": "T006",
+      "category": "Repudiation",
+      "title": "Insufficient or Tamperable Audit Logs",
+      "description": "Jika D3 Audit Log tidak mencatat detail yang cukup (misalnya, IP address, user agent, detail kegagalan login) atau tidak dilindungi dari modifikasi/penghapusan, pengguna atau penyerang dapat menyangkal tindakan yang dilakukan, mempersulit forensik dan akuntabilitas.",
+      "location": "D3 Audit Log, F8",
+      "cwe_reference": "CWE-778",
+      "severity": "Medium",
+      "rationale": "Audit log sangat penting untuk akuntabilitas. Kurangnya detail atau kemampuan untuk memanipulasi log dapat memungkinkan penolakan tindakan dan menyembunyikan aktivitas berbahaya."
+    },
+    {
+      "id": "T007",
+      "category": "Information Disclosure",
+      "title": "Cleartext Internal Communication (F5)",
+      "description": "Alur data F5 (P2 ke P4) menggunakan 'HTTP internal'. Jika ini berarti HTTP tanpa TLS, maka informasi sensitif seperti user_id dapat diungkapkan kepada penyerang yang berhasil menembus TB3 Internal Network Boundary dan melakukan sniffing.",
+      "location": "F5 (P2 Login Service API -> P4 Session Manager)",
+      "cwe_reference": "CWE-319",
+      "severity": "High",
+      "rationale": "Meskipun ada asumsi 'Database menggunakan koneksi terenkripsi (TLS internal)', F5 secara spesifik disebut 'HTTP internal'. Ini adalah celah potensial untuk pengungkapan informasi jika tidak ada enkripsi yang diterapkan pada alur data ini."
+    },
+    {
+      "id": "T008",
+      "category": "Denial of Service",
+      "title": "Resource Exhaustion via Password Reset Requests",
+      "description": "Tanpa rate limiting atau CAPTCHA pada P3 Password Reset Service, penyerang dapat membanjiri sistem dengan permintaan reset password untuk banyak akun, menyebabkan kelelahan sumber daya pada P3 atau E2 Email Service Provider, yang mengakibatkan DoS untuk pengguna yang sah.",
+      "location": "P3 Password Reset Service, E2 Email Service Provider",
+      "cwe_reference": "CWE-770",
+      "severity": "Medium",
+      "rationale": "Asumsi 'Tidak ada rate limiting' dan 'Tidak ada CAPTCHA' secara langsung menciptakan kerentanan ini, memungkinkan penyerang untuk mengganggu layanan reset password dan membebani layanan email."
+    },
+    {
+      "id": "T009",
+      "category": "Spoofing",
+      "title": "Phishing Attack",
+      "description": "Penyerang dapat membuat situs web palsu yang meniru P1 Web Browser untuk menipu pengguna (E1) agar memasukkan kredensial mereka (F1, F9). Ini memungkinkan penyerang untuk mencuri kredensial dan meniru identitas pengguna.",
+      "location": "E1 Pengguna, P1 Web Browser, F1, F9",
+      "cwe_reference": "CWE-1390",
+      "severity": "High",
+      "rationale": "Phishing adalah ancaman eksternal yang umum dan efektif untuk sistem login. Meskipun bukan kerentanan teknis dalam sistem itu sendiri, sistem harus dirancang untuk memitigasi dampaknya, misalnya dengan MFA atau peringatan keamanan."
+    },
+    {
+      "id": "T010",
+      "category": "Elevation of Privilege",
+      "title": "Cross-Site Scripting (XSS) Vulnerability",
+      "description": "Jika P1 Web Browser atau backend services (P2, P3) rentan terhadap XSS, penyerang dapat menyuntikkan skrip berbahaya ke halaman web. Skrip ini dapat mencuri session cookie (F7) atau kredensial, memungkinkan pembajakan sesi dan eskalasi hak akses.",
+      "location": "P1 Web Browser, F7 Session cookie",
+      "cwe_reference": "CWE-79",
+      "severity": "High",
+      "rationale": "XSS adalah salah satu kerentanan web paling umum yang dapat menyebabkan pencurian sesi dan eksekusi kode sisi klien, yang pada akhirnya mengarah pada eskalasi hak akses."
+    }
+  ],
+  "summary": {
+    "by_category": {
+      "Spoofing": 2,
+      "Tampering": 1,
+      "Repudiation": 1,
+      "Information Disclosure": 1,
+      "Denial of Service": 2,
+      "Elevation of Privilege": 3
+    },
+    "by_severity": {
+      "Critical": 2,
+      "High": 6,
+      "Medium": 2,
+      "Low": 0
+    }
+  }
+}
