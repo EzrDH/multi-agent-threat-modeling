@@ -1,0 +1,386 @@
+[
+  {
+    "chunk_id": "ASVS-V11.1.1",
+    "source": "ASVS",
+    "content": "[ASVS V11.1.1 - Level 1]\nSection: V11.1 Cryptographic Inventory and Documentation\n\nRequirement: Verify that all cryptographic modules, libraries, and assets (algorithms, keys, certificates) are documented and inventoried.\n\nRationale: Maintaining a complete cryptographic bill of materials (CBOM) enables rapid response to algorithm vulnerabilities and supports migration planning (e.g., post-quantum cryptography).\n\nImplementation Guidance: Use SAST/DAST tools to discover cryptographic usage. Tools include CryptoMon (eBPF-based), Cryptobom Forge (CodeQL-based).\n\nRelated CWE: CWE-1240",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.1",
+      "section_title": "Cryptographic Inventory and Documentation",
+      "control_id": "V11.1.1",
+      "level": "1",
+      "related_cwe": "CWE-1240",
+      "related_nist": ""
+    }
+  },
+  {
+    "chunk_id": "ASVS-V11.2.1",
+    "source": "ASVS",
+    "content": "[ASVS V11.2.1 - Level 1]\nSection: V11.2 Symmetric Cryptography\n\nRequirement: Verify that symmetric encryption uses AES-128 or AES-256 with an authenticated encryption mode (AES-GCM or AES-CCM preferred).\n\nRationale: Authenticated encryption modes provide both confidentiality and integrity, preventing tampering attacks.\n\nImplementation Guidance: - **Approved:** AES-256-GCM, AES-128-GCM, ChaCha20-Poly1305\n- **Deprecated:** AES-ECB (no semantic security), AES-CBC without HMAC\n- **Forbidden:** DES, 3DES (Triple-DES), Blowfish, RC4\n\nRelated CWE: CWE-327\nRelated NIST: SP 800-38D, SP 800-175B",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.2",
+      "section_title": "Symmetric Cryptography",
+      "control_id": "V11.2.1",
+      "level": "1",
+      "related_cwe": "CWE-327",
+      "related_nist": "SP 800-38D,SP 800-175B"
+    }
+  },
+  {
+    "chunk_id": "ASVS-V11.2.2",
+    "source": "ASVS",
+    "content": "[ASVS V11.2.2 - Level 1]\nSection: V11.2 Symmetric Cryptography\n\nRequirement: Verify that initialization vectors (IVs) and nonces are generated using a cryptographically secure random number generator and are unique per encryption operation.\n\nRationale: IV/nonce reuse with the same key destroys the security guarantees of authenticated encryption modes.\n\nImplementation Guidance: Generate 96-bit random nonces for GCM mode. Use counter mode (incrementing) only when key uniqueness is guaranteed.\n\nRelated CWE: CWE-329",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.2",
+      "section_title": "Symmetric Cryptography",
+      "control_id": "V11.2.2",
+      "level": "1",
+      "related_cwe": "CWE-329",
+      "related_nist": ""
+    }
+  },
+  {
+    "chunk_id": "ASVS-V11.3.1",
+    "source": "ASVS",
+    "content": "[ASVS V11.3.1 - Level 1]\nSection: V11.3 Asymmetric Cryptography\n\nRequirement: Verify that asymmetric cryptography uses approved algorithms with sufficient key sizes:\n- RSA: minimum 2048 bits (3072 bits recommended)\n- ECC: minimum P-256 (NIST curves) or Curve25519/Ed25519\n- DSA: forbidden (use ECDSA or Ed25519 instead)\n\nRationale: RSA-1024 is broken; smaller ECC curves are vulnerable to discrete log attacks.\n\nImplementation Guidance: - **Approved:** RSA-2048+, RSA-3072+, ECDSA P-256/P-384, Ed25519\n- **Deprecated:** RSA-1024\n- **Forbidden:** DSA, RSA < 1024\n\nRelated CWE: CWE-326",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.3",
+      "section_title": "Asymmetric Cryptography",
+      "control_id": "V11.3.1",
+      "level": "1",
+      "related_cwe": "CWE-326",
+      "related_nist": ""
+    }
+  },
+  {
+    "chunk_id": "ASVS-V11.3.2",
+    "source": "ASVS",
+    "content": "[ASVS V11.3.2 - Level 2]\nSection: V11.3 Asymmetric Cryptography\n\nRequirement: Verify that RSA implementations use OAEP padding for encryption (not PKCS#1 v1.5) and PSS padding for signatures.\n\nRationale: PKCS#1 v1.5 padding is vulnerable to Bleichenbacher's attack.\n\nRelated CWE: CWE-780",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.3",
+      "section_title": "Asymmetric Cryptography",
+      "control_id": "V11.3.2",
+      "level": "2",
+      "related_cwe": "CWE-780",
+      "related_nist": ""
+    }
+  },
+  {
+    "chunk_id": "ASVS-V11.4.1",
+    "source": "ASVS",
+    "content": "[ASVS V11.4.1 - Level 1]\nSection: V11.4 Cryptographic Hashing\n\nRequirement: Verify that the application uses approved cryptographic hash functions (SHA-256, SHA-384, SHA-512, SHA-3) and does NOT use MD5 or SHA-1 for security purposes.\n\nRationale: MD5 and SHA-1 are vulnerable to collision attacks and are unsuitable for any security purpose including integrity verification.\n\nImplementation Guidance: - **Approved:** SHA-256, SHA-384, SHA-512, SHA-3 family, BLAKE2/BLAKE3\n- **Forbidden:** MD5, SHA-1, MD4, RIPEMD-128\n\nRelated CWE: CWE-328, CWE-327",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.4",
+      "section_title": "Cryptographic Hashing",
+      "control_id": "V11.4.1",
+      "level": "1",
+      "related_cwe": "CWE-328,CWE-327",
+      "related_nist": ""
+    }
+  },
+  {
+    "chunk_id": "ASVS-V11.4.2",
+    "source": "ASVS",
+    "content": "[ASVS V11.4.2 - Level 1]\nSection: V11.4 Cryptographic Hashing\n\nRequirement: Verify that passwords are stored using approved password hashing functions with appropriate work factors:\n- Argon2id (preferred): m=64MB (65536 KiB), t=3, p=4\n- bcrypt: cost factor >= 12\n- scrypt: N=2^17, r=8, p=1\n- PBKDF2-HMAC-SHA256: minimum 600,000 iterations (NIST SP 800-63B v4)\n\nRationale: Memory-hard functions like Argon2id resist GPU/ASIC-accelerated cracking.\n\nImplementation Guidance: - **Preferred:** Argon2id\n- **Acceptable:** bcrypt cost >=12, scrypt with strong parameters\n- **Forbidden:** MD5, SHA-1, SHA-256 (without proper KDF), plaintext storage\n\nRelated CWE: CWE-759, CWE-916\nRelated NIST: SP 800-63B",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.4",
+      "section_title": "Cryptographic Hashing",
+      "control_id": "V11.4.2",
+      "level": "1",
+      "related_cwe": "CWE-759,CWE-916",
+      "related_nist": "SP 800-63B"
+    }
+  },
+  {
+    "chunk_id": "ASVS-V11.5.1",
+    "source": "ASVS",
+    "content": "[ASVS V11.5.1 - Level 1]\nSection: V11.5 Random Values\n\nRequirement: Verify that all cryptographic randomness uses a cryptographically secure pseudorandom number generator (CSPRNG), not standard PRNGs.\n\nRationale: Standard PRNGs (java.util.Random, Math.random, rand()) are predictable and unsuitable for keys, IVs, tokens, or session identifiers.\n\nImplementation Guidance: - **Linux:** getrandom(2) syscall, /dev/urandom\n- **Windows:** BCryptGenRandom with BCRYPT_USE_SYSTEM_PREFERRED_RNG\n- **macOS/iOS:** SecRandomCopyBytes\n- **Java:** java.security.SecureRandom (NOT java.util.Random)\n- **Python:** secrets module (NOT random module)\n- **Node.js:** crypto.randomBytes() (NOT Math.random())\n\nRelated CWE: CWE-338, CWE-330",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.5",
+      "section_title": "Random Values",
+      "control_id": "V11.5.1",
+      "level": "1",
+      "related_cwe": "CWE-338,CWE-330",
+      "related_nist": ""
+    }
+  },
+  {
+    "chunk_id": "ASVS-V11.5.2",
+    "source": "ASVS",
+    "content": "[ASVS V11.5.2 - Level 2]\nSection: V11.5 Random Values\n\nRequirement: Verify that security tokens (session IDs, password reset tokens, CSRF tokens) use at least 128 bits of entropy.\n\nRationale: Tokens with insufficient entropy can be brute-forced or guessed.\n\nImplementation Guidance: Generate 16+ bytes (128+ bits) of random data, encoded as base64url or hex.\n\nRelated CWE: CWE-340, CWE-640",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.5",
+      "section_title": "Random Values",
+      "control_id": "V11.5.2",
+      "level": "2",
+      "related_cwe": "CWE-340,CWE-640",
+      "related_nist": ""
+    }
+  },
+  {
+    "chunk_id": "ASVS-V11.6.1",
+    "source": "ASVS",
+    "content": "[ASVS V11.6.1 - Level 1]\nSection: V11.6 Key Management\n\nRequirement: Verify that cryptographic keys are generated by a CSPRNG, never derived from low-entropy sources (passwords, predictable values).\n\nRationale: Keys derived from passwords directly are vulnerable to dictionary attacks.\n\nImplementation Guidance: Use HKDF (RFC 5869) or PBKDF2 with high iteration count for password-based key derivation.\n\nRelated CWE: CWE-321",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.6",
+      "section_title": "Key Management",
+      "control_id": "V11.6.1",
+      "level": "1",
+      "related_cwe": "CWE-321",
+      "related_nist": ""
+    }
+  },
+  {
+    "chunk_id": "ASVS-V11.6.2",
+    "source": "ASVS",
+    "content": "[ASVS V11.6.2 - Level 2]\nSection: V11.6 Key Management\n\nRequirement: Verify that cryptographic keys are stored using approved key management solutions (HSM, key vault, KMS) and never embedded in source code, configuration files, or repositories.\n\nRationale: Hard-coded keys are easily exposed through code leaks, decompilation, or repository access.\n\nImplementation Guidance: - **Cloud KMS:** AWS KMS, Google Cloud KMS, Azure Key Vault\n- **HSM:** PKCS#11-compatible hardware modules\n- **Open Source:** HashiCorp Vault, Mozilla SOPS\n\nRelated CWE: CWE-798, CWE-321",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.6",
+      "section_title": "Key Management",
+      "control_id": "V11.6.2",
+      "level": "2",
+      "related_cwe": "CWE-798,CWE-321",
+      "related_nist": ""
+    }
+  },
+  {
+    "chunk_id": "ASVS-V11.6.3",
+    "source": "ASVS",
+    "content": "[ASVS V11.6.3 - Level 2]\nSection: V11.6 Key Management\n\nRequirement: Verify that cryptographic keys have a documented lifecycle including generation, rotation, archival, and destruction policies.\n\nRationale: Static keys accumulate exposure risk over time; rotation limits the impact of key compromise.\n\nImplementation Guidance: Rotate encryption keys annually for L2, quarterly for L3. Implement automated key rotation where possible.\n\nRelated NIST: SP 800-57",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.6",
+      "section_title": "Key Management",
+      "control_id": "V11.6.3",
+      "level": "2",
+      "related_cwe": "",
+      "related_nist": "SP 800-57"
+    }
+  },
+  {
+    "chunk_id": "ASVS-V11.7.1",
+    "source": "ASVS",
+    "content": "[ASVS V11.7.1 - Level 1]\nSection: V11.7 Transport Layer Security (Cross-reference V12)\n\nRequirement: Verify that TLS configuration uses TLS 1.2 minimum (TLS 1.3 preferred) with strong cipher suites only.\n\nImplementation Guidance: - **TLS 1.3 Approved:** TLS_AES_256_GCM_SHA384, TLS_CHACHA20_POLY1305_SHA256, TLS_AES_128_GCM_SHA256\n- **TLS 1.2 Approved:** ECDHE-based suites with AES-GCM or ChaCha20-Poly1305\n- **Forbidden:** TLS 1.0, TLS 1.1, SSL 3.0, all RC4/DES/3DES/MD5/SHA-1 cipher suites\n- Enable HSTS with max-age >= 31536000 (1 year)\n- Use certificates with RSA-2048+ or ECDSA P-256+ keys\n\nRelated CWE: CWE-326, CWE-319, CWE-327",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.7",
+      "section_title": "Transport Layer Security (Cross-reference V12)",
+      "control_id": "V11.7.1",
+      "level": "1",
+      "related_cwe": "CWE-326,CWE-319,CWE-327",
+      "related_nist": ""
+    }
+  },
+  {
+    "chunk_id": "ASVS-V11.8.1",
+    "source": "ASVS",
+    "content": "[ASVS V11.8.1 - Level 1]\nSection: V11.8 JWT and Token Security\n\nRequirement: Verify that JSON Web Tokens (JWTs) are signed using approved algorithms (RS256, ES256, EdDSA, HS256 with strong secret) and that the application rejects tokens with `alg: none` or weak algorithms.\n\nRationale: The `alg: none` vulnerability and algorithm confusion attacks have caused widespread JWT compromises.\n\nImplementation Guidance: - **Approved:** RS256 (RSA-PSS preferred), ES256, ES384, EdDSA\n- **Conditional:** HS256 with 256-bit+ secret (only for symmetric trust scenarios)\n- **Forbidden:** `alg: none`, HS256 with weak secrets, weak algorithm acceptance\n\nRelated CWE: CWE-347",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.8",
+      "section_title": "JWT and Token Security",
+      "control_id": "V11.8.1",
+      "level": "1",
+      "related_cwe": "CWE-347",
+      "related_nist": ""
+    }
+  },
+  {
+    "chunk_id": "ASVS-V11.8.2",
+    "source": "ASVS",
+    "content": "[ASVS V11.8.2 - Level 1]\nSection: V11.8 JWT and Token Security\n\nRequirement: Verify that JWTs include appropriate claims (iss, sub, aud, exp, iat) and have short expiration times (<= 15 minutes for access tokens).\n\nRationale: Long-lived tokens increase blast radius of token theft.\n\nRelated CWE: CWE-613",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.8",
+      "section_title": "JWT and Token Security",
+      "control_id": "V11.8.2",
+      "level": "1",
+      "related_cwe": "CWE-613",
+      "related_nist": ""
+    }
+  },
+  {
+    "chunk_id": "ASVS-V11.9.1",
+    "source": "ASVS",
+    "content": "[ASVS V11.9.1 - Level 3]\nSection: V11.9 Post-Quantum Cryptography (Future-Ready)\n\nRequirement: Verify that the application has a migration plan for post-quantum cryptography (PQC) considering the cryptographic inventory from V11.1.\n\nRationale: Quantum computers will eventually break RSA, ECC, and DH-based cryptography. NIST has standardized PQC algorithms (CRYSTALS-Kyber, CRYSTALS-Dilithium) as of 2024.\n\nImplementation Guidance: Identify assets with high \"harvest now, decrypt later\" risk. Plan migration to NIST PQC standards (FIPS 203, FIPS 204, FIPS 205).\n\n---",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.9",
+      "section_title": "Post-Quantum Cryptography (Future-Ready)",
+      "control_id": "V11.9.1",
+      "level": "3",
+      "related_cwe": "",
+      "related_nist": ""
+    }
+  },
+  {
+    "chunk_id": "ASVS-V11.10.1",
+    "source": "ASVS",
+    "content": "[ASVS V11.10.1 - Level 1]\nSection: V11.10 Forbidden Cryptography (Negative Requirements)\n\nRequirement: Verify that the application does NOT use the following:\n\n| Category | Forbidden Items |\n|---|---|\n| Hash | MD5, SHA-1, MD4, RIPEMD-128 |\n| Symmetric Cipher | DES, 3DES, Blowfish, RC4, RC2 |\n| Block Mode | ECB (for confidentiality), CBC without HMAC |\n| Asymmetric | RSA < 2048 bits, DSA, DH with weak parameters |\n| Padding | PKCS#1 v1.5 (use OAEP/PSS), null padding |\n| Random | Math.random(), java.util.Random, rand(), srand(time(0)) |\n| TLS | TLS 1.0, TLS 1.1, SSL 3.0 |\n| JWT | alg: none, weak HS256 secrets |\n\nRelated CWE: CWE-347, CWE-916, CWE-330, CWE-327, CWE-328",
+    "metadata": {
+      "source": "OWASP_ASVS",
+      "version": "5.0",
+      "chapter": "V11",
+      "section_id": "V11.10",
+      "section_title": "Forbidden Cryptography (Negative Requirements)",
+      "control_id": "V11.10.1",
+      "level": "1",
+      "related_cwe": "CWE-347,CWE-916,CWE-330,CWE-327,CWE-328",
+      "related_nist": ""
+    }
+  },
+  {
+    "chunk_id": "NIST-SC-8",
+    "source": "NIST",
+    "content": "[NIST SC-8 - Transmission Confidentiality and Integrity]\nFamily: SC (NIST 800-53 Rev. 5)\n\nControl: Protect the confidentiality and integrity of transmitted information.\n\nEnhancements:\n- SC-8(1) Cryptographic Protection: Implement cryptographic mechanisms to prevent unauthorized disclosure of information and detect changes to information during transmission.\n- SC-8(2) Pre/Post Transmission Handling: Maintain the confidentiality and integrity of information during preparation for transmission and during reception.\n\nImplementation Guidance: Use TLS 1.2 minimum (TLS 1.3 preferred) with AEAD cipher suites. Disable insecure protocols (SSL 3.0, TLS 1.0, TLS 1.1). Implement HSTS with max-age >= 31536000.\n\nRelated CWE: CWE-319, CWE-326, CWE-327\nRelated ASVS: V11.7.1, V12.1.1, V12.2.1",
+    "metadata": {
+      "source": "NIST_800-53",
+      "version": "Rev.5",
+      "control_id": "SC-8",
+      "title": "Transmission Confidentiality and Integrity",
+      "family": "SC",
+      "related_cwe": "CWE-319,CWE-326,CWE-327",
+      "related_asvs": "V11.7.1,V12.1.1,V12.2.1"
+    }
+  },
+  {
+    "chunk_id": "NIST-SC-12",
+    "source": "NIST",
+    "content": "[NIST SC-12 - Cryptographic Key Establishment and Management]\nFamily: SC (NIST 800-53 Rev. 5)\n\nControl: Establish and manage cryptographic keys when cryptography is employed within the system in accordance with key generation, distribution, storage, access, and destruction requirements.\n\nEnhancements:\n- SC-12(1) Availability: Maintain availability of information in the event of the loss of cryptographic keys by users.\n- SC-12(2) Symmetric Keys: Produce, control, and distribute symmetric cryptographic keys using NIST FIPS-compliant key management technology and processes.\n- SC-12(3) Asymmetric Keys: Produce, control, and distribute asymmetric cryptographic keys using approved key management technology and processes.\n\nImplementation Guidance: Use HSM (FIPS 140-2/3 Level 3+) or cloud KMS (AWS KMS, Google Cloud KMS, Azure Key Vault). Implement key rotation policies (annual for L2, quarterly for L3). Never hard-code keys in source code.\n\nRelated CWE: CWE-321, CWE-798\nRelated ASVS: V11.6.1, V11.6.2, V11.6.3",
+    "metadata": {
+      "source": "NIST_800-53",
+      "version": "Rev.5",
+      "control_id": "SC-12",
+      "title": "Cryptographic Key Establishment and Management",
+      "family": "SC",
+      "related_cwe": "CWE-321,CWE-798",
+      "related_asvs": "V11.6.1,V11.6.2,V11.6.3"
+    }
+  },
+  {
+    "chunk_id": "NIST-SC-13",
+    "source": "NIST",
+    "content": "[NIST SC-13 - Cryptographic Protection]\nFamily: SC (NIST 800-53 Rev. 5)\n\nControl: Determine the types of cryptography required for each use, and implement the types of cryptography required for each use in accordance with applicable laws, executive orders, directives, regulations, policies, standards, and guidelines.\n\nImplementation Guidance: Use FIPS 140-2/3 validated cryptographic modules. Approved algorithms: AES-128/256 (GCM/CCM modes), SHA-256/384/512, SHA-3, RSA-2048+, ECDSA P-256+, Ed25519, ChaCha20-Poly1305. Avoid weak algorithms: MD5, SHA-1, DES, 3DES, RC4, RSA-1024.\n\nRelated CWE: CWE-327, CWE-328, CWE-326\nRelated ASVS: V11.2.1, V11.3.1, V11.4.1, V11.10.1",
+    "metadata": {
+      "source": "NIST_800-53",
+      "version": "Rev.5",
+      "control_id": "SC-13",
+      "title": "Cryptographic Protection",
+      "family": "SC",
+      "related_cwe": "CWE-327,CWE-328,CWE-326",
+      "related_asvs": "V11.2.1,V11.3.1,V11.4.1,V11.10.1"
+    }
+  },
+  {
+    "chunk_id": "NIST-SC-17",
+    "source": "NIST",
+    "content": "[NIST SC-17 - Public Key Infrastructure Certificates]\nFamily: SC (NIST 800-53 Rev. 5)\n\nControl: Issue public key certificates under an organization-approved certificate policy, or obtain public key certificates from an approved service provider, and include only approved trust anchors in trust stores or certificate stores managed by the organization.\n\nImplementation Guidance: Use trusted CA-issued certificates (Let's Encrypt, DigiCert, etc.) or internal PKI. Implement certificate pinning for mobile/critical apps. Monitor certificate expiration. Use minimum RSA-2048 or ECDSA P-256 for certificates.\n\nRelated CWE: CWE-295, CWE-296, CWE-297\nRelated ASVS: V11.7.1",
+    "metadata": {
+      "source": "NIST_800-53",
+      "version": "Rev.5",
+      "control_id": "SC-17",
+      "title": "Public Key Infrastructure Certificates",
+      "family": "SC",
+      "related_cwe": "CWE-295,CWE-296,CWE-297",
+      "related_asvs": "V11.7.1"
+    }
+  },
+  {
+    "chunk_id": "NIST-SC-23",
+    "source": "NIST",
+    "content": "[NIST SC-23 - Session Authenticity]\nFamily: SC (NIST 800-53 Rev. 5)\n\nControl: Protect the authenticity of communications sessions.\n\nEnhancements:\n- SC-23(1) Invalidate Session Identifiers at Logout: Invalidate session identifiers upon user logout or other session termination.\n- SC-23(3) Unique System-Generated Session Identifiers: Generate a unique session identifier for each session with cryptographically strong randomness.\n- SC-23(5) Allowed Certificate Authorities: Only allow the use of organization-defined certificate authorities for verification of the establishment of protected sessions.\n\nImplementation Guidance: Session tokens must have >= 128 bits of entropy from CSPRNG. Invalidate sessions on logout, password change, and after idle timeout. Use Secure, HttpOnly, SameSite=Strict cookie flags.\n\nRelated CWE: CWE-384, CWE-613, CWE-330\nRelated ASVS: V11.5.2, V11.8.2",
+    "metadata": {
+      "source": "NIST_800-53",
+      "version": "Rev.5",
+      "control_id": "SC-23",
+      "title": "Session Authenticity",
+      "family": "SC",
+      "related_cwe": "CWE-384,CWE-613,CWE-330",
+      "related_asvs": "V11.5.2,V11.8.2"
+    }
+  },
+  {
+    "chunk_id": "NIST-SC-28",
+    "source": "NIST",
+    "content": "[NIST SC-28 - Protection of Information at Rest]\nFamily: SC (NIST 800-53 Rev. 5)\n\nControl: Protect the confidentiality and integrity of information at rest.\n\nEnhancements:\n- SC-28(1) Cryptographic Protection: Implement cryptographic mechanisms to prevent unauthorized disclosure and modification of information at rest on storage devices.\n\nImplementation Guidance: Use full-disk encryption (BitLocker, LUKS, FileVault) for storage. Encrypt databases with TDE (Transparent Data Encryption) or column-level encryption for PII. Use AES-256-GCM with key managed by KMS. Encrypt backups separately with different keys.\n\nRelated CWE: CWE-312, CWE-311\nRelated ASVS: V11.2.1, V11.6.2",
+    "metadata": {
+      "source": "NIST_800-53",
+      "version": "Rev.5",
+      "control_id": "SC-28",
+      "title": "Protection of Information at Rest",
+      "family": "SC",
+      "related_cwe": "CWE-312,CWE-311",
+      "related_asvs": "V11.2.1,V11.6.2"
+    }
+  },
+  {
+    "chunk_id": "NIST-IA-5",
+    "source": "NIST",
+    "content": "[NIST IA-5 - Authenticator Management]\nFamily: IA (NIST 800-53 Rev. 5)\n\nControl: Manage system authenticators by verifying the identity of the individual, group, role, service, or device receiving the authenticator; establishing initial authenticator content; ensuring authenticators have sufficient strength; and protecting authenticator content from unauthorized disclosure.\n\nEnhancements:\n- IA-5(1) Password-Based Authentication: For password-based authentication: maintain a list of commonly-used passwords; verify passwords are not on the list; transmit passwords only over cryptographically-protected channels; STORE PASSWORDS USING APPROVED SALTED KEY DERIVATION FUNCTIONS (preferably memory-hard); enforce password change after compromise.\n- IA-5(2) Public Key-Based Authentication: For public key-based authentication: enforce authorized access; map authenticated identity to account; verify revocation status.\n\nImplementation Guidance: Use Argon2id (preferred), bcrypt (cost>=12), or PBKDF2-HMAC-SHA256 (>=600,000 iterations per NIST SP 800-63B v4) for password hashing. Generate unique random salt per password (>=128 bits). Implement password history (last 24 passwords) and breach checking.\n\nRelated CWE: CWE-916, CWE-759, CWE-256\nRelated ASVS: V11.4.2",
+    "metadata": {
+      "source": "NIST_800-53",
+      "version": "Rev.5",
+      "control_id": "IA-5",
+      "title": "Authenticator Management",
+      "family": "IA",
+      "related_cwe": "CWE-916,CWE-759,CWE-256",
+      "related_asvs": "V11.4.2"
+    }
+  },
+  {
+    "chunk_id": "NIST-IA-7",
+    "source": "NIST",
+    "content": "[NIST IA-7 - Cryptographic Module Authentication]\nFamily: IA (NIST 800-53 Rev. 5)\n\nControl: Implement mechanisms for authentication to a cryptographic module that meet the requirements of applicable laws, executive orders, directives, policies, regulations, standards, and guidelines for such authentication.\n\nImplementation Guidance: Authenticate to FIPS 140-2/3 validated cryptographic modules using approved methods (smart cards, FIDO2, PKI certificates). For HSM access, use multi-factor authentication with PIN + biometric or PIN + smart card.\n\nRelated CWE: CWE-287, CWE-308\nRelated ASVS: V6.x (Authentication chapter)",
+    "metadata": {
+      "source": "NIST_800-53",
+      "version": "Rev.5",
+      "control_id": "IA-7",
+      "title": "Cryptographic Module Authentication",
+      "family": "IA",
+      "related_cwe": "CWE-287,CWE-308",
+      "related_asvs": "V6.x (Authentication chapter)"
+    }
+  }
+]

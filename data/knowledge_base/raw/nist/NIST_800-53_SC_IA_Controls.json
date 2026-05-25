@@ -1,0 +1,163 @@
+{
+  "metadata": {
+    "title": "NIST SP 800-53 Rev. 5 — Selected Cryptography-Related Controls",
+    "source": "NIST Special Publication 800-53 Revision 5",
+    "url": "https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final",
+    "scope": "SC family (System and Communications Protection) + IA-5, IA-7 (crypto-related from Identification & Authentication family)",
+    "version": "Rev. 5 (September 2020)",
+    "note": "This is a curated excerpt for the Cryptographic Mitigation Recommender Agent. Full NIST 800-53 OSCAL catalog available at https://github.com/usnistgov/oscal-content"
+  },
+  "controls": [
+    {
+      "id": "SC-8",
+      "title": "Transmission Confidentiality and Integrity",
+      "family": "SC",
+      "control_text": "Protect the confidentiality and integrity of transmitted information.",
+      "control_enhancements": [
+        {
+          "id": "SC-8(1)",
+          "title": "Cryptographic Protection",
+          "text": "Implement cryptographic mechanisms to prevent unauthorized disclosure of information and detect changes to information during transmission."
+        },
+        {
+          "id": "SC-8(2)",
+          "title": "Pre/Post Transmission Handling",
+          "text": "Maintain the confidentiality and integrity of information during preparation for transmission and during reception."
+        }
+      ],
+      "implementation_guidance": "Use TLS 1.2 minimum (TLS 1.3 preferred) with AEAD cipher suites. Disable insecure protocols (SSL 3.0, TLS 1.0, TLS 1.1). Implement HSTS with max-age >= 31536000.",
+      "related_cwe": ["CWE-319", "CWE-326", "CWE-327"],
+      "related_asvs": ["V11.7.1", "V12.1.1", "V12.2.1"]
+    },
+    {
+      "id": "SC-12",
+      "title": "Cryptographic Key Establishment and Management",
+      "family": "SC",
+      "control_text": "Establish and manage cryptographic keys when cryptography is employed within the system in accordance with key generation, distribution, storage, access, and destruction requirements.",
+      "control_enhancements": [
+        {
+          "id": "SC-12(1)",
+          "title": "Availability",
+          "text": "Maintain availability of information in the event of the loss of cryptographic keys by users."
+        },
+        {
+          "id": "SC-12(2)",
+          "title": "Symmetric Keys",
+          "text": "Produce, control, and distribute symmetric cryptographic keys using NIST FIPS-compliant key management technology and processes."
+        },
+        {
+          "id": "SC-12(3)",
+          "title": "Asymmetric Keys",
+          "text": "Produce, control, and distribute asymmetric cryptographic keys using approved key management technology and processes."
+        }
+      ],
+      "implementation_guidance": "Use HSM (FIPS 140-2/3 Level 3+) or cloud KMS (AWS KMS, Google Cloud KMS, Azure Key Vault). Implement key rotation policies (annual for L2, quarterly for L3). Never hard-code keys in source code.",
+      "related_cwe": ["CWE-321", "CWE-798"],
+      "related_asvs": ["V11.6.1", "V11.6.2", "V11.6.3"]
+    },
+    {
+      "id": "SC-13",
+      "title": "Cryptographic Protection",
+      "family": "SC",
+      "control_text": "Determine the types of cryptography required for each use, and implement the types of cryptography required for each use in accordance with applicable laws, executive orders, directives, regulations, policies, standards, and guidelines.",
+      "implementation_guidance": "Use FIPS 140-2/3 validated cryptographic modules. Approved algorithms: AES-128/256 (GCM/CCM modes), SHA-256/384/512, SHA-3, RSA-2048+, ECDSA P-256+, Ed25519, ChaCha20-Poly1305. Avoid weak algorithms: MD5, SHA-1, DES, 3DES, RC4, RSA-1024.",
+      "related_cwe": ["CWE-327", "CWE-328", "CWE-326"],
+      "related_asvs": ["V11.2.1", "V11.3.1", "V11.4.1", "V11.10.1"]
+    },
+    {
+      "id": "SC-17",
+      "title": "Public Key Infrastructure Certificates",
+      "family": "SC",
+      "control_text": "Issue public key certificates under an organization-approved certificate policy, or obtain public key certificates from an approved service provider, and include only approved trust anchors in trust stores or certificate stores managed by the organization.",
+      "implementation_guidance": "Use trusted CA-issued certificates (Let's Encrypt, DigiCert, etc.) or internal PKI. Implement certificate pinning for mobile/critical apps. Monitor certificate expiration. Use minimum RSA-2048 or ECDSA P-256 for certificates.",
+      "related_cwe": ["CWE-295", "CWE-296", "CWE-297"],
+      "related_asvs": ["V11.7.1"]
+    },
+    {
+      "id": "SC-23",
+      "title": "Session Authenticity",
+      "family": "SC",
+      "control_text": "Protect the authenticity of communications sessions.",
+      "control_enhancements": [
+        {
+          "id": "SC-23(1)",
+          "title": "Invalidate Session Identifiers at Logout",
+          "text": "Invalidate session identifiers upon user logout or other session termination."
+        },
+        {
+          "id": "SC-23(3)",
+          "title": "Unique System-Generated Session Identifiers",
+          "text": "Generate a unique session identifier for each session with cryptographically strong randomness."
+        },
+        {
+          "id": "SC-23(5)",
+          "title": "Allowed Certificate Authorities",
+          "text": "Only allow the use of organization-defined certificate authorities for verification of the establishment of protected sessions."
+        }
+      ],
+      "implementation_guidance": "Session tokens must have >= 128 bits of entropy from CSPRNG. Invalidate sessions on logout, password change, and after idle timeout. Use Secure, HttpOnly, SameSite=Strict cookie flags.",
+      "related_cwe": ["CWE-384", "CWE-613", "CWE-330"],
+      "related_asvs": ["V11.5.2", "V11.8.2"]
+    },
+    {
+      "id": "SC-28",
+      "title": "Protection of Information at Rest",
+      "family": "SC",
+      "control_text": "Protect the confidentiality and integrity of information at rest.",
+      "control_enhancements": [
+        {
+          "id": "SC-28(1)",
+          "title": "Cryptographic Protection",
+          "text": "Implement cryptographic mechanisms to prevent unauthorized disclosure and modification of information at rest on storage devices."
+        }
+      ],
+      "implementation_guidance": "Use full-disk encryption (BitLocker, LUKS, FileVault) for storage. Encrypt databases with TDE (Transparent Data Encryption) or column-level encryption for PII. Use AES-256-GCM with key managed by KMS. Encrypt backups separately with different keys.",
+      "related_cwe": ["CWE-312", "CWE-311"],
+      "related_asvs": ["V11.2.1", "V11.6.2"]
+    },
+    {
+      "id": "IA-5",
+      "title": "Authenticator Management",
+      "family": "IA",
+      "control_text": "Manage system authenticators by verifying the identity of the individual, group, role, service, or device receiving the authenticator; establishing initial authenticator content; ensuring authenticators have sufficient strength; and protecting authenticator content from unauthorized disclosure.",
+      "control_enhancements": [
+        {
+          "id": "IA-5(1)",
+          "title": "Password-Based Authentication",
+          "text": "For password-based authentication: maintain a list of commonly-used passwords; verify passwords are not on the list; transmit passwords only over cryptographically-protected channels; STORE PASSWORDS USING APPROVED SALTED KEY DERIVATION FUNCTIONS (preferably memory-hard); enforce password change after compromise."
+        },
+        {
+          "id": "IA-5(2)",
+          "title": "Public Key-Based Authentication",
+          "text": "For public key-based authentication: enforce authorized access; map authenticated identity to account; verify revocation status."
+        }
+      ],
+      "implementation_guidance": "Use Argon2id (preferred), bcrypt (cost>=12), or PBKDF2-HMAC-SHA256 (>=600,000 iterations per NIST SP 800-63B v4) for password hashing. Generate unique random salt per password (>=128 bits). Implement password history (last 24 passwords) and breach checking.",
+      "related_cwe": ["CWE-916", "CWE-759", "CWE-256"],
+      "related_asvs": ["V11.4.2"]
+    },
+    {
+      "id": "IA-7",
+      "title": "Cryptographic Module Authentication",
+      "family": "IA",
+      "control_text": "Implement mechanisms for authentication to a cryptographic module that meet the requirements of applicable laws, executive orders, directives, policies, regulations, standards, and guidelines for such authentication.",
+      "implementation_guidance": "Authenticate to FIPS 140-2/3 validated cryptographic modules using approved methods (smart cards, FIDO2, PKI certificates). For HSM access, use multi-factor authentication with PIN + biometric or PIN + smart card.",
+      "related_cwe": ["CWE-287", "CWE-308"],
+      "related_asvs": ["V6.x (Authentication chapter)"]
+    }
+  ],
+  "threat_to_control_mapping": {
+    "weak_password_hashing_CWE-916": ["IA-5", "IA-5(1)"],
+    "insecure_jwt_signing_CWE-347": ["SC-13"],
+    "weak_tls_configuration_CWE-327": ["SC-8", "SC-8(1)", "SC-13"],
+    "predictable_password_reset_token_CWE-640": ["SC-23", "SC-23(3)", "IA-5"],
+    "cleartext_internal_communication_CWE-319": ["SC-8", "SC-8(1)"],
+    "session_theft_via_xss_CWE-79": ["SC-23"],
+    "hardcoded_credentials_CWE-798": ["SC-12", "SC-12(3)", "IA-5"],
+    "weak_random_CWE-330": ["SC-13"],
+    "weak_encryption_CWE-326": ["SC-13", "SC-8"],
+    "broken_crypto_algorithm_CWE-327": ["SC-13"],
+    "missing_encryption_at_rest_CWE-311": ["SC-28", "SC-28(1)"],
+    "improper_cert_validation_CWE-295": ["SC-17"]
+  }
+}

@@ -1,4 +1,4 @@
-# Multi-Agent Threat Modeling Framework - Phase 1 MVP
+# Multi-Agent Threat Modeling Framework - Phase 1 + Phase 2.1
 # Python 3.10+ required
 
 # === Core Multi-Agent Framework ===
@@ -6,7 +6,6 @@ crewai>=0.80.0,<1.0.0
 crewai-tools>=0.12.0,<1.0.0
 
 # === LLM Integration (Gemini via LiteLLM) ===
-# CrewAI uses LiteLLM internally, but we install Google generative AI for clarity
 google-generativeai>=0.8.0
 
 # === Configuration & Environment ===
@@ -14,20 +13,23 @@ python-dotenv>=1.0.0
 pydantic>=2.5.0,<3.0.0
 
 # === Output Formatting & Utilities ===
-rich>=13.7.0          # Pretty terminal output
-pyyaml>=6.0.1         # Config files (Phase 2)
+rich>=13.7.0
+pyyaml>=6.0.1
 
-# === Development & Testing (optional) ===
+# === Phase 2 — Knowledge Base & RAG ===
+chromadb>=0.4.22,<1.0.0           # Vector database (local persistent)
+langchain-google-genai>=1.0.0     # Gemini embeddings
+langchain-community>=0.0.20       # Document loaders
+langchain-text-splitters>=0.0.1   # Text chunking utilities
+tiktoken>=0.5.0                   # Token counting for chunk sizing
+markdown>=3.5                     # Parse ASVS markdown
+requests>=2.31.0                  # Download knowledge base sources
+
+# === Development & Testing ===
 pytest>=7.4.0
-black>=24.0.0         # Code formatter
-ruff>=0.1.0           # Linter
+black>=24.0.0
+ruff>=0.1.0
 
-# === Phase 2 dependencies (commented out, akan diaktifkan saat Phase 2) ===
-# chromadb>=0.4.22                  # Vector database untuk RAG
-# langchain-google-genai>=1.0.0     # Embeddings via Gemini
-# langchain-community>=0.0.20       # Document loaders
-# tiktoken>=0.5.0                   # Token counting
-
-# === Phase 3 dependencies (commented out, akan diaktifkan saat Phase 3) ===
+# === Phase 3 dependencies (commented, akan diaktifkan saat Phase 3) ===
 # streamlit>=1.30.0                 # UI
 # plotly>=5.18.0                    # Visualization
