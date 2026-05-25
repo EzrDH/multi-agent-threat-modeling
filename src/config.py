@@ -45,8 +45,10 @@ if not GEMINI_API_KEY or GEMINI_API_KEY == "your_gemini_api_key_here":
 
 # Set env vars yang dibutuhkan LiteLLM untuk Gemini
 os.environ["GEMINI_API_KEY"] = GEMINI_API_KEY
-os.environ["GOOGLE_API_KEY"] = GEMINI_API_KEY  # Beberapa lib pakai nama ini
-
+# Clear GOOGLE_API_KEY agar tidak konflik dengan google-genai SDK
+# (kalau ter-set, SDK akan prefer GOOGLE_API_KEY over key yang dipass explicit)
+if "GOOGLE_API_KEY" in os.environ:
+    del os.environ["GOOGLE_API_KEY"]
 
 # ============================================================================
 # Phase 2 — Knowledge Base Configuration
