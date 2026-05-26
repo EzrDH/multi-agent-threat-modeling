@@ -1,12 +1,15 @@
 """
 Pydantic schemas untuk Multi-Agent Threat Modeling Framework.
-
-Mendefinisikan structured input/output untuk:
-- Threat (input dari Threat Identification Agent)
-- Mitigation (output dari Cryptographic Mitigation Recommender Agent)
 """
 
-from .threat import Threat, ThreatList, StrideCategory
+from .threat import (
+    Threat,
+    ThreatList,
+    StrideCategory,
+    ThreatPriority,
+    ClassifiedThreat,
+    ClassificationOutput,
+)
 from .crypto_mitigation import (
     StandardReference,
     CryptoAlgorithm,
@@ -14,14 +17,32 @@ from .crypto_mitigation import (
     MitigationRecommendation,
     MitigationOutput,
 )
+from .report import (
+    PriorityBreakdown,
+    ComplianceSummary,
+    PipelineMetadata,
+    FullReport,
+    build_full_report,
+)
 
 __all__ = [
+    # Threat
     "Threat",
     "ThreatList",
     "StrideCategory",
+    "ThreatPriority",
+    "ClassifiedThreat",
+    "ClassificationOutput",
+    # Mitigation
     "StandardReference",
     "CryptoAlgorithm",
     "ComplianceMapping",
     "MitigationRecommendation",
     "MitigationOutput",
+    # Report
+    "PriorityBreakdown",
+    "ComplianceSummary",
+    "PipelineMetadata",
+    "FullReport",
+    "build_full_report",
 ]

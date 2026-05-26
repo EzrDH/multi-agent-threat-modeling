@@ -1,7 +1,8 @@
 """
 Threat schema — input ke Cryptographic Mitigation Recommender Agent.
 
-Match dengan output Phase 1 MVP Threat Identification Agent.
+Phase 2.3 UPDATE: Tambah field 'priority' dan 'is_crypto_related' yang
+di-set oleh Threat Classification Agent.
 """
 
 from enum import Enum
@@ -20,11 +21,17 @@ class StrideCategory(str, Enum):
     ELEVATION_OF_PRIVILEGE = "E"
 
 
+class ThreatPriority(str, Enum):
+    """Priority level untuk threat (di-classify oleh Threat Classification Agent)."""
+    CRITICAL = "Critical"
+    HIGH = "High"
+    MEDIUM = "Medium"
+    LOW = "Low"
+
+
 class Threat(BaseModel):
     """
     Representasi satu ancaman teridentifikasi oleh Threat Identification Agent.
-    
-    Format ini match dengan output JSON Phase 1 MVP.
     """
     
     threat_id: str = Field(
@@ -42,7 +49,6 @@ class Threat(BaseModel):
     description: str = Field(
         ...,
         description="Deskripsi detail ancaman dan bagaimana bisa dieksploitasi",
-        examples=["Application uses MD5 to hash user passwords, vulnerable to rainbow table attacks"],
     )
     
     stride_category: StrideCategory = Field(
@@ -59,19 +65,37 @@ class Threat(BaseModel):
     affected_components: list[str] = Field(
         default_factory=list,
         description="Komponen dari DFD yang terdampak",
-        examples=[["Authentication Service", "User Database"]],
     )
     
     attack_vector: Optional[str] = Field(
         default=None,
         description="Bagaimana attacker bisa exploit ancaman ini",
-        examples=["Attacker dengan akses ke database dump bisa crack password offline"],
     )
     
     severity: Optional[str] = Field(
         default=None,
-        description="Severity level (Critical/High/Medium/Low)",
-        examples=["High"],
+        description="Severity level (legacy field dari Phase 1)",
+    )
+    
+    # === Phase 2.3 — Set oleh Threat Classification Agent ===
+    
+    priority: Optional[ThreatPriority] = Field(
+        default=None,
+        description="Priority level di-classify oleh Threat Classification Agent",
+    )
+    
+    is_crypto_related: Optional[bool] = Field(
+        default=None,
+        description=(
+            "True jika threat ini berkaitan dengan kriptografi "
+            "(encryption, hashing, signing, key management, TLS, dll.) — "
+            "akan diproses oleh Cryptographic Mitigation Recommender Agent."
+        ),
+    )
+    
+    classification_rationale: Optional[str] = Field(
+        default=None,
+        description="Alasan klasifikasi priority dan is_crypto_related",
     )
     
     def to_retrieval_query(self) -> str:
@@ -94,5 +118,26 @@ class ThreatList(BaseModel):
     
     metadata: dict = Field(
         default_factory=dict,
-        description="Metadata sources (DFD nama, timestamp, etc.)",
+        description="Metadata (DFD name, timestamp, etc.)",
+    )
+
+
+class ClassifiedThreat(BaseModel):
+    """
+    Output structured dari Threat Classification Agent untuk satu threat.
+    Field-nya akan di-merge balik ke Threat object.
+    """
+    
+    threat_id: str = Field(..., description="Threat ID untuk reference")
+    priority: ThreatPriority = Field(..., description="Priority level")
+    is_crypto_related: bool = Field(..., description="Apakah threat ini kripto-related")
+    rationale: str = Field(..., description="Alasan singkat klasifikasi")
+
+
+class ClassificationOutput(BaseModel):
+    """Wrapper output untuk batch classification."""
+    
+    classifications: list[ClassifiedThreat] = Field(
+        ...,
+        description="List of classified threats",
     )
